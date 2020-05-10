@@ -17,13 +17,25 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from keras.models import load_model
+from tkinter import *  
+from PIL import ImageTk,Image
+from tkinter import filedialog
+import os
+root = Tk()
+Label(root, text = 'Plant Disease Detection', font =( 
+  'Verdana', 25)).pack(side = TOP, pady = 10)
+canvas = Canvas(root, width = 300, height = 300)  
+canvas.pack()
+root.filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.*",),("all files","*.*")))
+img = ImageTk.PhotoImage(Image.open(root.filename))
+canvas.create_image(20, 20, anchor=NW, image=img)
 
 default_image_size=tuple((256,256))
 def convert_image_to_array(image_dir):
     try:
         image = cv2.imread(image_dir)
-        plt.imshow(image)
-        plt.show()
+        '''plt.imshow(image)
+        plt.show()'''
         if image is not None :
             image = cv2.resize(image, default_image_size)   
             return img_to_array(image)
@@ -33,9 +45,9 @@ def convert_image_to_array(image_dir):
         print(f"Error : {e}")
         return None
 
-with open('C:/Users/devesh/Desktop/cnn_model.pkl','rb') as f:
+with open('C:/Users/Dell/Desktop/cnn_model.pkl','rb') as f:
     model=pickle.load(f)
-with open('C:/Users/devesh/Desktop/label_transform.pkl','rb') as f1:
+with open('C:/Users/Dell/Desktop/label_transform.pkl','rb') as f1:
     lavel=pickle.load(f1)
 
 EPOCHS=25
@@ -44,16 +56,15 @@ INIT_LR=1e-3
 opt=Adam(lr=INIT_LR,decay=INIT_LR/EPOCHS)
 
 model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['accuracy'])
-img=convert_image_to_array('C:/Users/devesh/Desktop/imp.JPG')
+img=convert_image_to_array(root.filename)
 
 imglist=list()
 imglist.append(img)
 np_image_list = np.array(imglist, dtype=np.float16) / 225.0
 classes=model.predict_classes(np_image_list)
 result=lavel.classes_[classes[0]]
-if(result[0]=='T'):
-    a='Tomato'
-else:
-    a='Pomato'
-print('Name of Plant',a)
-print('Name of Disease',result)
+ourMessage =result
+messageVar = Message(root, text = ourMessage) 
+messageVar.config(bg='lightgreen') 
+messageVar.pack( )
+root.mainloop()
