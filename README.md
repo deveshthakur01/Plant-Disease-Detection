@@ -4,17 +4,8 @@ Detection Accuracy is 95%.
 
 
 
-
-
-
-
-
-
-
-
 Contributors:
 1. Devesh Thakur 
 2. Rambandhu Sharma
-3. Paritosh Pandey
-4. Rajeev Kumar
+3. Rajeev Kumar
 
